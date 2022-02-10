@@ -37,7 +37,24 @@ uses
       // получить новое значение размера для числа val смотрите ниже описание
       // если кратко то  P:=Tpanel.create(self); P.height:=  AmScale.Value(88);
       class function Value(val:integer):integer; static;
-
+      
+      
+      // ChangeScaleValue
+      // есть случаи когда в вами написаном контроле есть какие то переменные
+      // которые не изменяются при изменении маштаба хотя в вашей логике это заложено
+      // например некая переменная ширины другого контрола в текущем или какая константа высоты всех элементов скрол бокса
+      // в этот случаи в этот контроле нужно в protected перегрузить процедуру
+      {
+        protected
+             procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
+      }
+      // и посчитать новое значение
+      {
+        inherited;
+        HTest:= AmScale.ChangeScaleValue(HTest,M, D);
+      }
+      class function ChangeScaleValue(valOld:integer;M, D: Integer):integer; static;
+      
       // если хотим поменять мастаб всего приложения  SetScaleApp(120,100) увеличится на 20%
       class procedure SetScaleApp(New,Old:integer);
 
@@ -231,7 +248,10 @@ begin
    if IsShow then 
     result:=MulDiv(result, AppScaleNow, AppScaleDesing);
 end;
-
+class function AmScale.ChangeScaleValue(valOld:integer;M, D: Integer):integer;
+begin
+    result:=MulDiv(valOld, M, D);
+end;
  {
 class procedure AmScale.Start(Width_now, Width_debag: real);
 begin
