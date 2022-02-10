@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2022.02.10 04:15:44.061,=E:\Red 10.3\Projects\Unit1.pas</Transaction>
+    <Transaction>2022.02.10 04:32:17.346,E:\Red 10.3\Projects\Тест NewPc\ScaleForm\Unit1.dfm=E:\Red 10.3\Projects\Unit1.dfm</Transaction>
+    <Transaction>2022.02.10 04:32:17.346,E:\Red 10.3\Projects\Тест NewPc\ScaleForm\Unit1.pas=E:\Red 10.3\Projects\Unit1.pas</Transaction>
+    <Transaction>2022.02.10 04:32:21.971,E:\Red 10.3\Projects\Тест NewPc\ScaleForm\Project1.dproj=E:\Red 10.3\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
