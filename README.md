@@ -1,0 +1,2 @@
+# DelphiScale
+to work properly with scaling, you must use an environment prepared for this. there is nothing complicated and the letters will not shrink and everything will work fine. I have a demo application that shows how to work with scaling if the global scale of the system differs from the scale on the development aspiration also depending on the overall scale, it is possible to adjust the scale of only the application itself
