@@ -15,8 +15,10 @@ uses
      //хранит значение  маштаба по умолчанию
      //  AppScaleDesing рекомедую выстовить в 100 при создании формы а не здесь
      //  WinScaleDPIDesing рекомедую выстовить в 96 при создании формы что равно WinApi.Windows.USER_DEFAULT_SCREEN_DPI  а не здесь
+     // эти значения нужно выставить после AmScale.Init;
+     
      //если вы разрабатываете прогу и у вас на компе глобальный маштаб 120 то его и установите по умолчанию в WinScaleDPIDesing
-     // если у вас всегда глобальный маштаб 96 то ничего устанавливать не нужно см initialization
+     // если у вас всегда глобальный маштаб 96 то ничего устанавливать не нужно см initialization и AmScale.Init
 
       class var AppScaleDesing:Integer; //  какой маштаб был на этапе разработки
       class var AppScaleNow:Integer;    //какой маштаб сейчас в приложении
@@ -213,10 +215,11 @@ begin
           WinScaleDPINow := LMonitor.PixelsPerInch
         else
          WinScaleDPINow := Screen.PixelsPerInch;
-
+         {
         LForm := Application.MainForm;
         if (LForm <> nil)  then
         WinScaleDPIDesing := LForm.PixelsPerInch;
+        }
 
 
       end
@@ -227,10 +230,11 @@ begin
           WinScaleDPINow := LMonitor.PixelsPerInch
         else
          WinScaleDPINow := Screen.PixelsPerInch;
-
+         {
         LForm := Application.MainForm;
         if (LForm <> nil)  then
         WinScaleDPIDesing := LForm.PixelsPerInch;
+        }
       end;
            
 
