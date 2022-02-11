@@ -9,8 +9,8 @@ uses
   TAmPosControl = record
     L,//left
     T,//top
-    W,//С€РёСЂРёРЅР°
-    H,//РІС‹СЃРѕС‚Р°
+    W,//ширина
+    H,//высота
     F:Integer;//TFont.Size
     procedure Clear;
   end;
@@ -19,69 +19,77 @@ uses
     private
       class procedure SetScaleAppCustom(New,Old:integer);
     public
-     //С…СЂР°РЅРёС‚ Р·РЅР°С‡РµРЅРёРµ  РјР°С€С‚Р°Р±Р° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
-     //  AppScaleDesing СЂРµРєРѕРјРµРґСѓСЋ РІС‹СЃС‚РѕРІРёС‚СЊ РІ 100 РїСЂРё СЃРѕР·РґР°РЅРёРё С„РѕСЂРјС‹ Р° РЅРµ Р·РґРµСЃСЊ
-     //  WinScaleDPIDesing СЂРµРєРѕРјРµРґСѓСЋ РІС‹СЃС‚РѕРІРёС‚СЊ РІ 96 РїСЂРё СЃРѕР·РґР°РЅРёРё С„РѕСЂРјС‹ С‡С‚Рѕ СЂР°РІРЅРѕ WinApi.Windows.USER_DEFAULT_SCREEN_DPI  Р° РЅРµ Р·РґРµСЃСЊ
-     // СЌС‚Рё Р·РЅР°С‡РµРЅРёСЏ РЅСѓР¶РЅРѕ РІС‹СЃС‚Р°РІРёС‚СЊ РїРѕСЃР»Рµ AmScale.Init;
+     //хранит значение  маштаба по умолчанию
+     //  AppScaleDesing рекомедую выстовить в 100 при создании формы а не здесь
+     //  WinScaleDPIDesing рекомедую выстовить в 96 при создании формы что равно WinApi.Windows.USER_DEFAULT_SCREEN_DPI  а не здесь
+     // эти значения нужно выставить после AmScale.Init;
 
-     //РµСЃР»Рё РІС‹ СЂР°Р·СЂР°Р±Р°С‚С‹РІР°РµС‚Рµ РїСЂРѕРіСѓ Рё Сѓ РІР°СЃ РЅР° РєРѕРјРїРµ РіР»РѕР±Р°Р»СЊРЅС‹Р№ РјР°С€С‚Р°Р± 120 С‚Рѕ РµРіРѕ Рё СѓСЃС‚Р°РЅРѕРІРёС‚Рµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІ WinScaleDPIDesing
-     // РµСЃР»Рё Сѓ РІР°СЃ РІСЃРµРіРґР° РіР»РѕР±Р°Р»СЊРЅС‹Р№ РјР°С€С‚Р°Р± 96 С‚Рѕ РЅРёС‡РµРіРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ СЃРј initialization Рё  AmScale.Init;
+     //если вы разрабатываете прогу и у вас на компе глобальный маштаб 120 то его и установите по умолчанию в WinScaleDPIDesing
+     // если у вас всегда глобальный маштаб 96 то ничего устанавливать не нужно см initialization и  AmScale.Init;
 
-      class var AppScaleDesing:Integer; //  РєР°РєРѕР№ РјР°С€С‚Р°Р± Р±С‹Р» РЅР° СЌС‚Р°РїРµ СЂР°Р·СЂР°Р±РѕС‚РєРё
-      class var AppScaleNow:Integer;    //РєР°РєРѕР№ РјР°С€С‚Р°Р± СЃРµР№С‡Р°СЃ РІ РїСЂРёР»РѕР¶РµРЅРёРё
-      class var WinScaleDPIDesing:Integer; //РєР°РєРѕР№ РіР»РѕР±Р°Р»СЊРЅС‹Р№ РјР°С€С‚Р°Р± СЃРёСЃС‚РµРјС‹ Р±С‹Р»  РЅР° СЌС‚Р°РїРµ СЂР°Р·СЂР°Р±РѕС‚РєРё
-      class var WinScaleDPINow:Integer; //РєР°РєРѕР№ РіР»РѕР±Р°Р»СЊРЅС‹Р№ РјР°С€С‚Р°Р± СЃРёСЃС‚РµРјС‹ СЃРµР№С‡Р°СЃ РІ РїСЂРёР»РѕР¶РµРЅРёРё
-      class var IsShow:boolean;
-      // РїСЂРё СЃРѕР·РґР°РЅРёРё РіР»Р°РІРЅРѕР№ С„РѕСЂРјС‹ Р·Р°РїСѓСЃС‚РёС‚СЊ Init
-      // РјРѕР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РїР°СЂР°РјРµС‚СЂ СЃРѕС…СЂР°РЅРµРЅРЅРѕРіРѕ РјР°С€С‚Р°Р±Р° РїСЂРёР»РѕР¶РµРЅРёСЏ РЅР°РїСЂРёРјРµСЂ СЃ РєР°РєРѕР№ С‚Рѕ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
-      // СЌС‚Рѕ РїСЂРѕС†РµРЅС‚ РѕС‚ 30 РґРѕ 200 РѕР±С‹С‡РЅРѕ СЌС‚Рѕ 100 РїСЂРѕС†РµРЅС‚РѕРІ РѕС‚ СЂР°Р·РјРµСЂР° РїСЂРёР»РѕР¶РµРЅРёСЏ РЅР° СЌС‚Р°РїРµ СЂР°Р·СЂР°Р±РѕС‚РєРё
+      class var AppScaleDesing:Integer; //  какой маштаб был на этапе разработки
+      class var AppScaleNow:Integer;    //какой маштаб сейчас в приложении
+      class var WinScaleDPIDesing:Integer; //какой глобальный маштаб системы был  на этапе разработки
+      class var WinScaleDPINow:Integer; //какой глобальный маштаб системы сейчас в приложении
+      class var IsInit:boolean;     //Init была выполнены
+      class var IsShow:boolean;     //Show была выполнены
+      class var IsShowning:boolean; // сейчас выполняется Show
+      class var IsAppScaled:boolean; // сейчас выполняется SetScaleAppCustom
+      class var IsWinScaled:boolean; // сейчас выполняется WinScaled есть 2 события на форме к ним подключится FormAfterMonitorDpiChanged FormBeforeMonitorDpiChanged
+
+      // при создании главной формы запустить Init
+      // можно передать параметр сохраненного маштаба приложения например с какой то базы данных
+      // это процент от 30 до 200 обычно это 100 процентов от размера приложения на этапе разработки
       class procedure Init(ASavedProcent:Integer=100);
 
-      // РІ СЃРѕР±С‹РёС‚РёРё FormShow Р·Р°РїСѓСЃС‚РёС‚СЊ Show
+      // в собыитии FormShow запустить Show
       class procedure Show;
-      //  Р·Р°РїСѓСЃС‚РёС‚СЊ РІ СЃРѕР±С‹С‚РёРё РіР»Р°РІРЅРѕР№ С„РѕСЂРјС‹ FormAfterMonitorDpiChanged
-      // РїСЂРѕРёС…РѕРґРёС‚ РєРѕРіРґР° РІ СЃРёСЃС‚РµРјРµ РіР»РѕР±Р°Р»СЊРЅРѕ РјРµРЅСЏРµС‚СЃСЏ РјР°С€С‚Р°Р±
-      class procedure ChangeDPI(NewDPI,OldDPI:integer);
-
-
+      //  запустить в событии главной формы FormBeforeMonitorDpiChanged
+      // проиходит когда в системе глобально меняется маштаб
+      class procedure BeforeMonitorDpiChanged(NewDPI,OldDPI:integer);
+      //  запустить в событии главной формы FormAfterMonitorDpiChanged
+      // проиходит когда в системе глобально меняется маштаб
+      class procedure AfterMonitorDpiChanged(NewDPI,OldDPI:integer);
 
       //.............................................................
-      // Dinamic РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ РґРёРЅР°РјРёС‡РµСЃРєРё СЃРѕР·РґРѕРІР°РµРјС‹С… РєРѕРЅС‚СЂРѕР»РѕРІ
-      // РІРЅР°С‡Р°Р»Рµ РєРѕРЅС‚СЂРѕР»Сѓ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ parent Р° РїРѕС‚РѕРј value
-      // РїРѕР»СѓС‡РёС‚СЊ РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂР°Р·РјРµСЂР° РґР»СЏ С‡РёСЃР»Р° val СЃРјРѕС‚СЂРёС‚Рµ РЅРёР¶Рµ РѕРїРёСЃР°РЅРёРµ
-      // РµСЃР»Рё РєСЂР°С‚РєРѕ С‚Рѕ  P:=Tpanel.create(self); P.height:=  AmScale.DinamicValue(88);
+      // Dinamic использовать для динамически создоваемых контролов
+      // вначале контролу установить parent а потом value
+      // получить новое значение размера для числа val смотрите ниже описание
+      // если кратко то  P:=Tpanel.create(self); P.height:=  AmScale.DinamicValue(88);
       class function DinamicValue(val:integer):integer; static;
-      //РґР»СЏ font.size := AmScale.DinamicValueFontSize(10);
-      class function DinamicValueFontSize(val:integer):integer; static;
+      //для font.Height := AmScale.DinamicValueFontSize(10);
+      // получилось сделать только для font.Height c входным параметром  Font.Size
+      // т.к все уперается в матиматику  округления  маленький диапозон  Font.Size  и формулу Font.Size и  font.Height
+      class function DinamicValueFontHeight(FontSize:integer):integer; static;
      // .........................................................
 
 
-      // value СЃ РїР»Р°РІР°СЋС‰РµР№ Р·Р°РїСЏС‚РѕР№
+      // value с плавающей запятой
       class function DinamicValueNoRound(val:Double):Double; static;
 
-      // РµСЃР»Рё РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°Р»Рё РґР»СЏ РєР°Р¶РґРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ DinamicValue
-      // С‚Рѕ РїРѕ РѕРєРЅС‡Р°РЅРёСЋ СЃРѕР·РґР°РЅРёСЏ РєРѕРЅС‚СЂРѕР»Р° РІС‹Р·РІР°С‚СЊ
-      // DinamicScaleApp СЌС‚Рѕ РјР°С€С‚Р°Р± РїСЂРёР»РѕР¶РµРЅРёСЏ
-      // DinamicScaleWin РіР»РѕР±Р°Р»СЊРЅС‹Р№ РјР°С€С‚Р°Р±
+      // если не использовали для каждого значения DinamicValue
+      // то по окнчанию создания контрола вызвать
+      // DinamicScaleApp это маштаб приложения
+      // DinamicScaleWin глобальный маштаб
       class procedure DinamicScaleApp(Control:TWinControl); static;
       class procedure DinamicScaleWin(Control:TWinControl); static;
 
-       // С‡С‚Рѕ Р±С‹ font РЅРµ Р±С‹Р» РѕРіСЂРѕРјРЅС‹Рј РјРѕР¶РЅРѕ РµРіРѕ СЃРєРѕСЂРµРєС‚РёСЂРѕРІР°С‚СЊ
+       // что бы font не был огромным можно его скоректировать
       class function DinamicValueFontSizeCorrect(val:integer):integer; static;
 
-      // РєРѕРЅРІРµСЂС‚Р°С†РёСЏ font РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РјР°С€С‚Р°Р±Р°
+      // конвертация font для текущего маштаба
       class function FontSizeToHeight(val:integer):integer; static;
       class function FontHeightToSize(val:integer):integer; static;
       // ChangeScaleValue
-      // РµСЃС‚СЊ СЃР»СѓС‡Р°Рё РєРѕРіРґР° РІ РІР°РјРё РЅР°РїРёСЃР°РЅРѕРј РєРѕРЅС‚СЂРѕР»Рµ РµСЃС‚СЊ РєР°РєРёРµ С‚Рѕ РїРµСЂРµРјРµРЅРЅС‹Рµ
-      // РєРѕС‚РѕСЂС‹Рµ РЅРµ РёР·РјРµРЅСЏСЋС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё РјР°С€С‚Р°Р±Р° С…РѕС‚СЏ РІ РІР°С€РµР№ Р»РѕРіРёРєРµ СЌС‚Рѕ Р·Р°Р»РѕР¶РµРЅРѕ
-      // РЅР°РїСЂРёРјРµСЂ РЅРµРєР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ С€РёСЂРёРЅС‹ РґСЂСѓРіРѕРіРѕ РєРѕРЅС‚СЂРѕР»Р° РІ С‚РµРєСѓС‰РµРј РёР»Рё РєР°РєР°СЏ РєРѕРЅСЃС‚Р°РЅС‚Р° РІС‹СЃРѕС‚С‹ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ СЃРєСЂРѕР» Р±РѕРєСЃР°
-      // РІ СЌС‚РѕС‚ СЃР»СѓС‡Р°Рё РІ СЌС‚РѕС‚ РєРѕРЅС‚СЂРѕР»Рµ РЅСѓР¶РЅРѕ РІ protected РїРµСЂРµРіСЂСѓР·РёС‚СЊ РїСЂРѕС†РµРґСѓСЂСѓ
+      // есть случаи когда в вами написаном контроле есть какие то переменные
+      // которые не изменяются при изменении маштаба хотя в вашей логике это заложено
+      // например некая переменная ширины другого контрола в текущем или какая константа высоты всех элементов скрол бокса
+      // в этот случаи в этот контроле нужно в protected перегрузить процедуру
       {
         protected
              procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
       }
-      // Рё РїРѕСЃС‡РёС‚Р°С‚СЊ РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ
+      // и посчитать новое значение
       {
         inherited;
         HTest:= AmScale.ChangeScaleValue(HTest,M, D);
@@ -89,52 +97,54 @@ uses
       class function ChangeScaleValue(valOld:integer;M, D: Integer):integer; static;
 
 
-      // РµСЃР»Рё С…РѕС‚РёРј РїРѕРјРµРЅСЏС‚СЊ РјР°СЃС‚Р°Р± РІСЃРµРіРѕ РїСЂРёР»РѕР¶РµРЅРёСЏ  SetScaleApp(120,100) СѓРІРµР»РёС‡РёС‚СЃСЏ РЅР° 20%
-      class procedure SetScaleApp(New,Old:integer);
+      // если хотим поменять мастаб всего приложения  SetScaleApp(120,100) увеличится на 20%
+      class procedure SetScaleApp(New:integer;Old:integer=0);
 
-      // РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РґР»СЏ СЋР·РµСЂР° РІРѕР·РјРѕР¶РЅС‹С… РјР°С€С‚Р°Р±РѕРІ РїСЂРёР»РѕР¶РµРЅРёСЏ
+      // получить список для юзера возможных маштабов приложения
       class procedure GetAppToList(L:TStrings);
 
-      // Сѓ РІР°СЃ РµСЃС‚СЊ Р·РЅР°С‡РµРЅРёРµ РЅРѕ РЅРµ Р·РЅР°РµС‚Рµ РёРЅРґРµРє РµРіРѕ РІ СЃРїРёСЃРєРµ  = РЅР°Р№РґРёС‚Рµ
+      // у вас есть значение но не знаете индек его в списке  = найдите
       class function GetIndexFromList(L:TStrings;value:integer=0):integer;
 
-      // РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ СЃ СЃС‚СЂРѕРєРё РєРѕС‚РѕСЂР°СЏ Р±С‹Р»Р°  РїРѕР»СѓС‡РµРЅР° РІ GetAppToList
+      // получить значение с строки которая была  получена в GetAppToList
       class function GetValueFromStr(S:String):integer;
-      // РёР·РјРµРЅРёС‚СЊ РјР°С€С‚Р°Р± РєРѕРіРґР° СЋР·РµСЂ РІС‹Р±СЂР°Р» РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРїРёСЃРєР°
+      // изменить маштаб когда юзер выбрал новое значение из списка
       class procedure SetAppFromListInt(New:Integer);
-      //РїРµСЂРµРґР°С‚СЊ РѕРґРЅСѓ Р»РёРЅРёСЋ СЃРѕ СЃРїРёСЃРєР° РїРѕР»СѓС‡РµРЅРЅРѕРіРѕ РІ GetAppToList
+      //передать одну линию со списка полученного в GetAppToList
       class procedure SetAppFromList(S:String);
   end;
 
   function UserMainScale(val:integer):integer;
 
 {
-  Р­РўРћ РЎРўРђР РћР• РћРџРРЎРђРќРР• РЎРњР«РЎР› РўРћРў Р–Р• РїСЂРѕСЃС‚Рѕ РёРјРµРЅР° РїСЂРѕС†РµРґСѓСЂ РёР·РјРµРЅРµРЅС‹
+  ЭТО СТАРОЕ ОПИСАНИЕ СМЫСЛ ТОТ ЖЕ просто имена процедур изменены
 
-  РїРѕР»СѓС‡Р°РµС‚ РјР°С€С‚Р°Р± СЌРєСЂР°РЅР° Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° С„РѕСЂРј create Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёРµ РІ UserMainScaleGetConst
+  получает маштаб экрана у пользователя на форм create занести значение в UserMainScaleGetConst
 
- РіРґРµ
- Width_now СЌС‚Рѕ С€РёСЂРёРЅР° С„РѕСЂРјС‹ РєРѕРіРґР° РїСЂРѕРіСЂР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
- Width_debag СЌС‚Рѕ С€РёСЂРёРЅР° С„РѕСЂРјС‹ РЅР° СЌС‚Р°РїРµ СЂР°Р·СЂР°Р±РѕС‚РєРё
- РІ РѕС‚РІРµС‚ РїСЂРёС…РѕРґРёС‚ РїСЂРѕС†РµРЅС‚ РёР·РјРµРЅРµРЅРёСЏ , С‚.Рµ РјР°С€С‚Р°Р±
+ где
+ Width_now это ширина формы когда програ запускается
+ Width_debag это ширина формы на этапе разработки
+ в ответ приходит процент изменения , т.е маштаб
 USER_MAIN_SCALE_CREATE:= UserMainScaleGetConst(MyForm.Width,500);
-USER_MAIN_SCALE_CREATE С…СЂР°РЅРёС‚ С‚РµРєСѓС€РёР№ РјР°С€С‚Р°Р± РЅР°СЂРёРјРµСЂ 125.67 РЅРѕ РѕР±С‹С‡РЅРѕ 100
+USER_MAIN_SCALE_CREATE хранит текуший маштаб наример 125.67 но обычно 100
 
-РґР°Р»РµРµ РµСЃР»Рё СЃРѕР·РґР°РµРј РєРѕРјРїРѕРЅРµРЅС‚С‹ РґРёРЅР°С‡РёРјРёС‡РµРєРё С‚Рѕ СѓРєР°Р·С‹РІР°РµРј С€РёСЂРёРЅСѓ Рё РІС‹СЃРѕС‚Сѓ Рё РѕС‚СЃС‚СѓРїС‹ РєР°Рє
+далее если создаем компоненты диначимичеки то указываем ширину и высоту и отступы как
 P:=Tpanel.create(self);
 P.parent:=self;
-P.height:=  UserMainScale(88);  //С…РѕС‚СЏ СЂР°РЅСЊС€Рµ Р±С‹ РїРёСЃР°Р»Рё РєР°Рє  P.height:=  88;
+P.height:=  UserMainScale(88);  //хотя раньше бы писали как  P.height:=  88;
 P.font.size:=  UserMainScale(10);
 
 
-  РЅРµР±РѕР»СЊС€РѕРµ Р·Р°РјРµС‡Р°РЅРёРµ РїРѕ РґРёРЅР°РјРёС‡РµСЃРєРѕРјСѓ СЃРѕР·РґР°РЅРёСЋ РєРѕС‚СЂРѕР»РѕРІ
-  РїРѕСЃР»Рµ TWinControl.Create
-  Рё РґРѕ СѓСЃС‚Р°РІРЅРѕРІРєРё Parent
-  РЅСѓР¶РЅРѕ СЃС‚Р°РІРёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РІС‹СЃРѕС‚ РѕР±С‹С‡РЅРѕ С‚.Рµ
-  P.height:=  88;
+  небольшое замечание по динамическому созданию котролов
+  после TWinControl.Create
+  и до уставновки Parent
+  нужно ставить значения высот обычно т.е
+  P:=TPanel.Create(self);
+  P.ParentFont:=false;
   P.parent:=self;
-  РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё  Parent
+  после установки  Parent
   P.height:=  UserMainScale(88);
+  P.Font.Height := AmScale.DinamicValueFontHeight(8); 8 это Forn.Size
 }
 
 implementation
@@ -160,9 +170,9 @@ begin
     L.Clear;
    // L.Add('50 %');
     L.Add('75 %');
-    L.Add('85 %');
-    L.Add('100 % (СЂРµРєРѕРјРµРґСѓРµС‚СЃСЏ)');
-    L.Add('115 %');
+   // L.Add('85 %');
+    L.Add('100 % (рекомедуется)');
+   // L.Add('115 %');
     L.Add('125 %');
     L.Add('150 %');
     L.Add('175 %');
@@ -198,7 +208,7 @@ begin
    SetScaleApp(New,AppScaleNow);
 end;
 
-class procedure AmScale.SetScaleApp(New,Old:integer);
+class procedure AmScale.SetScaleApp(New:integer;Old:integer=0);
 begin
    if New<30 then exit;
    if Old<30 then
@@ -207,26 +217,52 @@ begin
 
    if New<>AppScaleNow then
    begin
-       SetScaleAppCustom(New,AppScaleNow);
        AppScaleNow:= New;
+       SetScaleAppCustom(New,Old);
    end;
 end;
 class procedure AmScale.SetScaleAppCustom(New, Old: integer);
 var i:integer;
 begin
+    if IsAppScaled then exit;    
+    IsAppScaled:=true;
+    try
      for  I := 0 to Screen.FormCount-1 do
      Screen.Forms[i].ScaleBy(New,Old);
+    finally
+       IsAppScaled:=false;
+    end;
 end;
 
 class procedure AmScale.Show;
 begin
-    SetScaleAppCustom(AppScaleNow,AppScaleDesing);
-    IsShow:=true;
+    if not IsShow then
+    begin
+      IsShow:=true;
+      if IsShowning then exit;
+      
+      IsShowning:=true;
+      try
+
+         SetScaleAppCustom(AppScaleNow,AppScaleDesing);
+      finally
+         IsShowning:=false;
+      end;
+
+    end;
+
+
 end;
 
-class procedure AmScale.ChangeDPI(NewDPI,OldDPI:integer);
+class procedure AmScale.BeforeMonitorDpiChanged(NewDPI,OldDPI:integer);
 begin
+  IsWinScaled:=true;
   WinScaleDPINow:= NewDPI;
+end;
+class procedure AmScale.AfterMonitorDpiChanged(NewDPI, OldDPI: integer);
+begin
+   WinScaleDPINow:= NewDPI;
+   IsWinScaled:=false;
 end;
 class procedure AmScale.Init(ASavedProcent:Integer=100);
 var LMonitor:TMonitor;
@@ -276,7 +312,7 @@ begin
       end;
 
 
-
+      IsInit:=true;
 
       //ScaleForPPI(GetParentCurrentDpi);
 
@@ -311,15 +347,46 @@ begin
     if IsShow and (AppScaleNow<>AppScaleDesing) then
     Control.ScaleBy(AppScaleNow,AppScaleDesing);
 end;
-class function AmScale.DinamicValueFontSize(val: integer): integer;
-var D:integer;
+class function AmScale.DinamicValueFontHeight(FontSize: integer): integer;
+var D,N:integer;
 r:real;
 begin
     D:=WinScaleDPIDesing;
-    r:=-(val*D/72); // convert Font.Size to Font.Height
-    r:=DinamicValueNoRound(r);
-    r := -(r*72/Screen.PixelsPerInch);// convert  Font.Height To Font.Size СЃ СѓС‡РµС‚РѕРј РјР°С€С‚Р°Р±Р° РїСЂРё Р·Р°РїСѓСЃРєРµ РїСЂРѕРіСЂР°РјРјС‹
-    Result := Round( SimpleRoundTo(r,0) );
+
+    D:=WinScaleDPIDesing;
+    N:=WinScaleDPINow;
+    Result:=-MulDiv(FontSize, D ,72); // convert Font.Size to Font.Height
+
+    if  (N<>D) then
+    Result:=MulDiv(Result,N,D);
+
+    if IsShow and (AppScaleNow<>AppScaleDesing) then
+    begin
+       Result:=MulDiv(Result,AppScaleNow,AppScaleDesing);
+     //  Result := -MulDiv(Result, 72, Screen.PixelsPerInch);
+      // Result:=-MulDiv(val, Screen.PixelsPerInch ,72);
+      // Result:=MulDiv(Result,AppScaleNow,AppScaleDesing);
+      //Result:=-20;
+    end ;
+
+   // Result := -MulDiv(Result, 72, Screen.PixelsPerInch);// convert  Font.Height To Font.Size с учетом маштаба при запуске программы
+
+   // D:=-MulDiv(Result, Screen.PixelsPerInch, 72);
+  //  r:=-(val*Screen.PixelsPerInch/72); // convert Font.Size to Font.Height
+  //  r:=SimpleRoundTo(r,0);
+  //  r:=DinamicValueNoRound(r);
+  //  r:=SimpleRoundTo(r,0);
+  //  Result:=Round(r);
+  //  Result:= -MulDiv(Result, 72, Screen.PixelsPerInch);
+   // r := -(r*72/Screen.PixelsPerInch);// convert  Font.Height To Font.Size с учетом маштаба при запуске программы
+   // Result := Round( SimpleRoundTo(r,0) );
+    {
+    D:=WinScaleDPIDesing;
+    Result:=-MulDiv(val, D ,72); // convert Font.Size to Font.Height
+    Result:=DinamicValue(Result);
+    Result := -MulDiv(Result, 72, Screen.PixelsPerInch);// convert  Font.Height To Font.Size с учетом маштаба при запуске программы
+
+     }
 end;
 
 class function  AmScale.DinamicValueFontSizeCorrect(val:integer):integer;
@@ -327,7 +394,7 @@ var D:integer;
 begin
     D:=WinScaleDPIDesing;
     Result:=-MulDiv(val, D ,72); // convert Font.Size to Font.Height
-    Result := -MulDiv(Result, 72, Screen.PixelsPerInch);// convert  Font.Height To Font.Size СЃ СѓС‡РµС‚РѕРј РјР°С€С‚Р°Р±Р° РїСЂРё Р·Р°РїСѓСЃРєРµ РїСЂРѕРіСЂР°РјРјС‹
+    Result := -MulDiv(Result, 72, Screen.PixelsPerInch);// convert  Font.Height To Font.Size с учетом маштаба при запуске программы
 
 end;
 class function AmScale.ChangeScaleValue(valOld:integer;M, D: Integer):integer;
@@ -344,6 +411,8 @@ begin
     Result:=-MulDiv(val, WinScaleDPINow ,72); // convert Font.Size to Font.Height
 end;
 
+
+
 {
 class procedure AmScale.Start(Width_now, Width_debag: real);
 begin
@@ -358,10 +427,18 @@ begin
 end;}
 initialization
 begin
-   AmScale.IsShow:=false;
+
    AmScale.AppScaleDesing:=100;
    AmScale.AppScaleNow:=100;
    AmScale.WinScaleDPIDesing:= WinApi.Windows.USER_DEFAULT_SCREEN_DPI;
    AmScale.WinScaleDPINow:=    WinApi.Windows.USER_DEFAULT_SCREEN_DPI;
+   AmScale.IsInit:=false;
+   AmScale.IsShow:=false;
+   AmScale.IsShowning:=false;
+   AmScale.IsAppScaled:=false;
+   AmScale.IsWinScaled:=false;
 end;
 end.
+
+
+
