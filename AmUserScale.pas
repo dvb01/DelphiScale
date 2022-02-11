@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,AmUserType;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,AmUserType,Math;
  type
   TAmPosControl = record
     L,//left
@@ -57,7 +57,7 @@ uses
 
 
       // value с плавающей запятой
-      class function DinamicValueNoRound(val:Real):Real; static;
+      class function DinamicValueNoRound(val:Double):Double; static;
 
       // если не использовали для каждого значения DinamicValue
       // то по окнчанию создания контрола вызвать
@@ -284,9 +284,14 @@ end;
 
 class function AmScale.DinamicValue(val: integer): integer;
 begin
-    Result:=round(DinamicValueNoRound(val));
+    Result:= val;
+    if  (WinScaleDPINow<>WinScaleDPIDesing) then
+    Result:=MulDiv(Result,WinScaleDPINow,WinScaleDPIDesing);
+
+    if IsShow and (AppScaleNow<>AppScaleDesing) then
+    Result:=MulDiv(Result,AppScaleNow,AppScaleDesing);
 end;
-class function AmScale.DinamicValueNoRound(val:Real):Real;
+class function AmScale.DinamicValueNoRound(val:Double):Double;
 begin
     Result:= val;
     if  (WinScaleDPINow<>WinScaleDPIDesing) then
@@ -314,7 +319,7 @@ begin
     r:=-(val*D/72); // convert Font.Size to Font.Height
     r:=DinamicValueNoRound(r);
     r := -(r*72/Screen.PixelsPerInch);// convert  Font.Height To Font.Size с учетом маштаба при запуске программы
-    Result := Round(r);
+    Result := Round( SimpleRoundTo(r,0) );
 end;
 
 class function  AmScale.DinamicValueFontSizeCorrect(val:integer):integer;
