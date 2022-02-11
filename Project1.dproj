@@ -83,6 +83,9 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <DCC_DcuOutput>.\$(Platform)\$(Config)\.dpu</DCC_DcuOutput>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -122,6 +125,21 @@
                 <Source>
                     <Source Name="MainSource">Project1.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\dclsgcWebSocketsD10_3.bpl">SGC WebSockets</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\dclcxPivotGridOLAPRS26.bpl">ExpressPivotGrid OLAP by Developer Express Inc.</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\dcldxPSDBTeeChartRS26.bpl">ExpressPrinting System ReportLink for DBTeeChart by Developer Express Inc.</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\TeeDB9260.bpl">TeeChart Database Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\TeeUI9260.bpl">TeeChart User Interface Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\Tee9260.bpl">TeeChart Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\dcldxPSTeeChartRS26.bpl">ExpressPrinting System ReportLink for TeeChart by Developer Express Inc.</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerDBXPluginEnt260.bpl">DBExpress Enterprise Data Explorer Integration</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="E:\Red 10.3\chart\Source\..\Compiled\Delphi26.win32\Bin\DclTeeMaker126.bpl">TeeMaker </Excluded_Packages>
+                    <Excluded_Packages Name="E:\Red 10.3\chart\Source\..\TeeTree\Compiled\Delphi26.win32\Bin\DclTree2D26Tee9.bpl">TeeTree 2 Components</Excluded_Packages>
+                    <Excluded_Packages Name="E:\Red 10.3\chart\TeeGrid-master\bin\Compiled\Delphi26.win32\Bin\DCLVCLTeeGrid26.bpl">File E:\Red 10.3\chart\TeeGrid-master\bin\Compiled\Delphi26.win32\Bin\DCLVCLTeeGrid26.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="E:\Red 10.3\chart\TeeGrid-master\bin\Compiled\Delphi26.win32\Bin\DCLFMXTeeGrid26.bpl">File E:\Red 10.3\chart\TeeGrid-master\bin\Compiled\Delphi26.win32\Bin\DCLFMXTeeGrid26.bpl not found</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="Win32\Debug\Project1.exe" Configuration="Debug" Class="ProjectOutput">

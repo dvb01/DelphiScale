@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,AmUserScale, Vcl.StdCtrls,math,AmUserType,IniFiles;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,Vcl.StdCtrls,math,AmUserScale,AmUserType,IniFiles;
 
 type
   TForm1 = class(TForm)
@@ -13,6 +13,8 @@ type
     Button1: TButton;
     Label1: TLabel;
     ScrollBox1: TScrollBox;
+    Button2: TButton;
+    Panel2: TPanel;
     procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
       NewDPI: Integer);
     procedure FormCreate(Sender: TObject);
@@ -22,11 +24,16 @@ type
     procedure Button1Click(Sender: TObject);
     procedure ScrollBox1MouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
+  protected
+     procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
   public
     { Public declarations }
-    CounterPanel:Integer;
+    CounterPanel,
+    HTest:Integer;
+    TestP:TPanel;
   end;
 
 var
@@ -46,16 +53,32 @@ var P:TPanel;
  end;
 begin
 
-   P:=TPanel.Create(self);
-   P.ParentBackground:=false;
-   P.Caption:='0';
-   P.Align:=alTop;
-   P.Parent:=ScrollBox1;
-   P.Font.Size:=AmScale.Value(10);
-   P.Height:=AmScale.Value(50);
-   P.Caption:='Panel№:'+CounterPanel.ToString+ '   Высота при создании:'+P.Height.ToString;
-   P.Color:=LocRandomColor;
+    P:=TPanel.Create(self);
+    TestP:=P;
+    P.ParentBackground:=false;
+    P.Caption:='0';
+    P.Align:=alTop;
+    P.Top:=-10000;
+    P.Color:=LocRandomColor;
+    P.Parent:= ScrollBox1;
+    P.Font.Size:=AmScale.DinamicValueFontSize(10);
+    P.Height:=AmScale.DinamicValue(50);
+    P.Caption:='Panel№:'+CounterPanel.ToString+ '   H:'+P.Height.ToString +' F:'+P.Font.Size.ToString;
+
    inc(CounterPanel);
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+
+  Showmessage(HTest.ToString+' ' +TestP.Height.ToString +' ' +TestP.font.Size.ToString);
+end;
+
+procedure TForm1.ChangeScale(M, D: Integer; isDpiChange: Boolean);
+begin
+  inherited;
+  HTest:= AmScale.ChangeScaleValue(HTest,M, D);
+
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
@@ -80,6 +103,7 @@ procedure TForm1.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
   NewDPI: Integer);
 begin
     AmScale.ChangeDPI(NewDPI,OldDPI);
+    HTest:= AmScale.ChangeScaleValue(HTest,NewDPI, OldDPI);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -91,16 +115,17 @@ begin
   finally
    Ini.Free;
   end;
-
+  HTest:=  AmScale.DinamicValue(50);
   CounterPanel:=0;
+  Button1Click(self);
+
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
 begin
-
-AmScale.Show;
-AmScale.GetAppToList(ComboBox1.Items);
-ComboBox1.ItemIndex:= AmScale.GetIndexFromList(ComboBox1.Items)
+  AmScale.Show;
+  AmScale.GetAppToList(ComboBox1.Items);
+  ComboBox1.ItemIndex:= AmScale.GetIndexFromList(ComboBox1.Items)
 end;
 
 procedure TForm1.ScrollBox1MouseWheel(Sender: TObject; Shift: TShiftState;

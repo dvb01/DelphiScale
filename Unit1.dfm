@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 582
-  ClientWidth = 878
+  ClientHeight = 356
+  ClientWidth = 752
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,16 +19,16 @@ object Form1: TForm1
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 527
-    Width = 878
+    Top = 301
+    Width = 752
     Height = 55
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 272
-    ExplicitWidth = 732
+    ExplicitTop = 527
+    ExplicitWidth = 878
     object Label1: TLabel
-      Left = 232
-      Top = 16
+      Left = 336
+      Top = 18
       Width = 182
       Height = 16
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1084#1072#1096#1090#1072#1073' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
@@ -40,8 +40,8 @@ object Form1: TForm1
       ParentFont = False
     end
     object ComboBox1: TComboBox
-      Left = 420
-      Top = 14
+      Left = 524
+      Top = 16
       Width = 217
       Height = 24
       Font.Charset = DEFAULT_CHARSET
@@ -70,12 +70,27 @@ object Form1: TForm1
       TabOrder = 1
       OnClick = Button1Click
     end
+    object Button2: TButton
+      Left = 167
+      Top = 16
+      Width = 59
+      Height = 25
+      Caption = 'HTest'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+      OnClick = Button2Click
+    end
   end
   object ScrollBox1: TScrollBox
     Left = 0
     Top = 0
-    Width = 878
-    Height = 527
+    Width = 752
+    Height = 301
     VertScrollBar.Tracking = True
     Align = alClient
     BorderStyle = bsNone
@@ -83,7 +98,21 @@ object Form1: TForm1
     ParentColor = False
     TabOrder = 1
     OnMouseWheel = ScrollBox1MouseWheel
-    ExplicitWidth = 732
-    ExplicitHeight = 272
+    ExplicitTop = -6
+    object Panel2: TPanel
+      Left = 0
+      Top = 0
+      Width = 752
+      Height = 50
+      Align = alTop
+      Caption = 'Panel2'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+    end
   end
 end
