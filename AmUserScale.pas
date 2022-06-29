@@ -115,7 +115,8 @@ uses
   end;
 
   function UserMainScale(val:integer):integer;
-
+  function AmScaleV(ValuePosition:integer):integer;
+  function AmScaleF(FontSize:integer):integer;
 {
   ЭТО СТАРОЕ ОПИСАНИЕ СМЫСЛ ТОТ ЖЕ просто имена процедур изменены
 
@@ -165,9 +166,18 @@ function UserMainScale(val:integer):integer;
 begin
    Result:=AmScale.DinamicValue(val);
 end;
+function AmScaleV(ValuePosition:integer):integer;
+begin
+   Result:=AmScale.DinamicValue(ValuePosition);
+end;
+function AmScaleF(FontSize:integer):integer;
+begin
+  Result:=AmScale.DinamicValueFontHeight(FontSize);
+end;
 class procedure AmScale.GetAppToList(L: TStrings);
 begin
     L.Clear;
+    if not IsInit then exit;
    // L.Add('50 %');
     L.Add('75 %');
    // L.Add('85 %');
@@ -180,6 +190,8 @@ begin
 end;
 class function AmScale.GetIndexFromList(L: TStrings; value: integer=0): integer;
 begin
+    Result:=-1;
+    if not IsInit then exit;
     if value<30 then
     value:= AppScaleNow;
     for Result := 0 to L.Count-1 do
@@ -191,6 +203,7 @@ class function AmScale.GetValueFromStr(S: String): integer;
 var tok:integer;
 begin
     Result:=0;
+    if not IsInit then exit;
     tok:=  pos(' ',S);
     if (tok<>1) and (tok<>0) then
     begin
@@ -201,15 +214,18 @@ end;
 
 class procedure AmScale.SetAppFromList(S: String);
 begin
+    if not IsInit then exit;
     SetAppFromListInt(GetValueFromStr(S));
 end;
 class procedure AmScale.SetAppFromListInt(New: Integer);
 begin
+   if not IsInit then exit;
    SetScaleApp(New,AppScaleNow);
 end;
 
 class procedure AmScale.SetScaleApp(New:integer;Old:integer=0);
 begin
+   if not IsInit then exit;
    if New<30 then exit;
    if Old<30 then
    Old:= AppScaleNow;
@@ -236,6 +252,8 @@ end;
 
 class procedure AmScale.Show;
 begin
+    if not IsInit then exit;
+
     if not IsShow then
     begin
       IsShow:=true;
@@ -321,6 +339,8 @@ end;
 class function AmScale.DinamicValue(val: integer): integer;
 begin
     Result:= val;
+    if not IsInit then exit;
+
     if  (WinScaleDPINow<>WinScaleDPIDesing) then
     Result:=MulDiv(Result,WinScaleDPINow,WinScaleDPIDesing);
 
@@ -330,6 +350,7 @@ end;
 class function AmScale.DinamicValueNoRound(val:Double):Double;
 begin
     Result:= val;
+    if not IsInit then exit;
     if  (WinScaleDPINow<>WinScaleDPIDesing) then
     Result:=Result*WinScaleDPINow/WinScaleDPIDesing;
 
@@ -339,11 +360,13 @@ end;
 
 class procedure AmScale.DinamicScaleWin(Control: TWinControl);
 begin
+   if not IsInit then exit;
    if (Control.Parent<>nil) and (WinScaleDPINow<>WinScaleDPIDesing)  then
    Control.ScaleBy(WinScaleDPINow,WinScaleDPIDesing);
 end;
 class procedure AmScale.DinamicScaleApp(Control: TWinControl);
 begin
+    if not IsInit then exit;
     if IsShow and (AppScaleNow<>AppScaleDesing) then
     Control.ScaleBy(AppScaleNow,AppScaleDesing);
 end;
@@ -351,6 +374,11 @@ class function AmScale.DinamicValueFontHeight(FontSize: integer): integer;
 var D,N:integer;
 r:real;
 begin
+    if not IsInit then
+    begin
+        Result:=FontSizeToHeight(FontSize);
+        exit;
+    end;
     D:=WinScaleDPIDesing;
 
     D:=WinScaleDPIDesing;
@@ -399,16 +427,17 @@ begin
 end;
 class function AmScale.ChangeScaleValue(valOld:integer;M, D: Integer):integer;
 begin
+    if not IsInit then exit(valOld);
     result:=MulDiv(valOld, M, D);
 end;
 
  class function AmScale.FontHeightToSize(val: integer): integer;
 begin
-  Result:=-MulDiv(Result, 72, WinScaleDPINow);// convert  Font.Height To Font.Size
+  Result:=-MulDiv(Result, 72, Screen.PixelsPerInch);// convert  Font.Height To Font.Size
 end;
 class function AmScale.FontSizeToHeight(val: integer): integer;
 begin
-    Result:=-MulDiv(val, WinScaleDPINow ,72); // convert Font.Size to Font.Height
+    Result:=-MulDiv(val, Screen.PixelsPerInch ,72); // convert Font.Size to Font.Height
 end;
 
 
