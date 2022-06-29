@@ -24,8 +24,6 @@ object Form1: TForm1
     Height = 55
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 527
-    ExplicitWidth = 878
     object Label1: TLabel
       Left = 336
       Top = 18
@@ -98,7 +96,6 @@ object Form1: TForm1
     ParentColor = False
     TabOrder = 1
     OnMouseWheel = ScrollBox1MouseWheel
-    ExplicitTop = -6
     object Panel2: TPanel
       Left = 0
       Top = 0

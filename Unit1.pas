@@ -61,7 +61,8 @@ begin
     P.Top:=-10000;
     P.Color:=LocRandomColor;
     P.Parent:= ScrollBox1;
-    P.Font.Size:=AmScale.DinamicValueFontSize(10);
+    // только так входной size на выходе Height
+    P.Font.Height:=AmScale.DinamicValueFontHeight(10);
     P.Height:=AmScale.DinamicValue(50);
     P.Caption:='Panel№:'+CounterPanel.ToString+ '   H:'+P.Height.ToString +' F:'+P.Font.Size.ToString;
 
@@ -70,7 +71,8 @@ end;
 
 procedure TForm1.Button2Click(Sender: TObject);
 begin
-
+  //HTest посто перемнная хранит отдельно высоту TestP
+  //  HTest измененяется на автомате в  TForm1.ChangeScale
   Showmessage(HTest.ToString+' ' +TestP.Height.ToString +' ' +TestP.font.Size.ToString);
 end;
 
@@ -102,7 +104,7 @@ end;
 procedure TForm1.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
   NewDPI: Integer);
 begin
-    AmScale.ChangeDPI(NewDPI,OldDPI);
+    AmScale.AfterMonitorDpiChanged(NewDPI,OldDPI);
     HTest:= AmScale.ChangeScaleValue(HTest,NewDPI, OldDPI);
 end;
 
